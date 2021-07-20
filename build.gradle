@@ -1,0 +1,46 @@
+buildscript {
+
+    /*
+    * ext: build.gradle에서 사용하는 전역변수로 설정
+    *       springBootVersion 이라는 전역 변수 사용
+    */
+    ext{
+        springBootVersion = '2.1.7.RELEASE'
+    }
+
+    /*
+    * repositories : 각종 의존성들을 어떤 원격 저장소에서 받을지 결정
+    *       기본적으로 mavenCentral을 사용
+    *       jcenter는 라이브러리 업로드를 간단하게 해주는 저장소
+    */
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+/*
+* apply plugin : 앞서 선언한 플러그인 의존성들을 적용할 것인지를 결정하는 코드
+*       io.spring.dependency-management 플러그인은 스프링 부트의 의존성을 관리해주는 필수 플러그인
+*/
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group 'com.jojoldu.book'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
