@@ -16,7 +16,7 @@ public class HelloController {
         예전에는 @RequestMapping(method=RequestMethod.GET)으로 사용
      */
     @GetMapping("/hello")
-    public String hello(){
+    public String hello() {
         return "hello";
     }
 
