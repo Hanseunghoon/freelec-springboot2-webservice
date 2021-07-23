@@ -2,14 +2,17 @@ package com.jojoldu.book.springboot.service.posts;
 
 import com.jojoldu.book.springboot.domain.posts.Posts;
 import com.jojoldu.book.springboot.domain.posts.PostsRepository;
+import com.jojoldu.book.springboot.web.dto.PostsListResponseDto;
 import com.jojoldu.book.springboot.web.dto.PostsResponseDto;
 import com.jojoldu.book.springboot.web.dto.PostsSaveRequestDto;
 import com.jojoldu.book.springboot.web.dto.PostsUpdateRequestDto;
-import javafx.geometry.Pos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import java.util.List;
+//import javax.transaction.Transactional; 로 사용하는 불상사는 없기를
+import org.springframework.transaction.annotation.Transactional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -54,5 +57,14 @@ public class PostsService {
         );
 
         return new PostsResponseDto(entity);
+    }
+
+    // readOnly = true : 트랜잭션 범위는 유지하되, 조회 기능만 남겨두어 조회속도 개선하기 위한 속성
+    // CRUD 기능이 없는 서비스 메소드에만 사용
+    @Transactional(readOnly = true)
+    public List<PostsListResponseDto> findAllDesc(){
+        return postsRepository.findAllDesc().stream()
+                .map(PostsListResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
