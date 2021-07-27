@@ -1,10 +1,14 @@
 package com.jojoldu.book.springboot.web;
 
+import com.jojoldu.book.springboot.config.auth.SecurityConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -24,9 +28,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     선언 시 @Controller, @ControllerAdvice 등 사용 o
            @Service, @Component, @Repository 등 사용 x
     여기서는 컨트롤러만 사용하기 때문에 선언
+
+    SecurityConfig는 읽는데, CustomOAuth2UserService를 읽지 못하므로
+    스캔대상에서 SecurityConfig를 제외!
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers = HelloController.class)
+@WebMvcTest(controllers = HelloController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
+        }
+)
 public class HelloControllerTest {
     /* 
         3. @Autowired
@@ -41,6 +52,7 @@ public class HelloControllerTest {
     private MockMvc mvc;
 
     @Test
+    @WithMockUser(roles = "USER")
     public void hello가_리턴된다() throws Exception {
         String hello = "hello";
         /*
@@ -65,6 +77,7 @@ public class HelloControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     public void helloDto가_리턴된다() throws Exception {
         String name = "hello";
         int amount = 1000;
